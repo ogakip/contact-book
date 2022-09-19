@@ -7,13 +7,13 @@ export class Client {
   id: string;
 
   @Column({ length: 158 })
-  first_name: string;
-
-  @Column({ length: 158 })
-  last_name: string;
+  name: string;
 
   @Column({ length: 158 })
   email: string;
+
+  @Column()
+  telephone: string
 
   @CreateDateColumn()
   created_at: Date;
