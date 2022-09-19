@@ -23,7 +23,7 @@ export class Client {
   @ManyToOne(() => User, {
     eager: true,
   })
-  @JoinColumn({ name: "agent_id" })
+  @JoinColumn({ name: "user_id" })
   user: User;
 
   @OneToMany(() => Contact, (Contact) => Contact.client)
