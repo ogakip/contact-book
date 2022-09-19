@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany } from "typeorm";
+import { Client } from "./client.entity";
 
 @Entity("users")
 @Unique(["email"])
@@ -14,4 +15,7 @@ export class User {
 
   @Column({ nullable: true })
   password: string;
+
+  @OneToMany(() => Client, (Client) => Client.user)
+  clients: Client[];
 }
