@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { User } from "./user.entity";
+import { Contact } from "./contact.entity";
 
 @Entity("clients")
 @Unique(["email"])
@@ -24,4 +25,7 @@ export class Client {
   })
   @JoinColumn({ name: "agent_id" })
   user: User;
+
+  @OneToMany(() => Contact, (Contact) => Contact.client)
+  contacts: Contact[];
 }
