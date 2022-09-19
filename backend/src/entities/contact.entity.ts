@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne, JoinColumn } from "typeorm";
+import { Client } from "./client.entity";
 
 @Entity("contacts")
 @Unique(["email"])
@@ -14,4 +15,10 @@ export class Contact {
 
   @Column()
   telephone: string
+
+  @ManyToOne(() => Client, {
+    eager: true,
+  })
+  @JoinColumn({ name: "client_id" })
+  client: Client;
 }
