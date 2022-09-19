@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { User } from "./user.entity";
 
 @Entity("clients")
 @Unique(["email"])
@@ -17,4 +18,10 @@ export class Client {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToOne(() => User, {
+    eager: true,
+  })
+  @JoinColumn({ name: "agent_id" })
+  user: User;
 }
