@@ -14,3 +14,11 @@ export const createUserSchema = object().shape({
       .matches(/\W/, "Your password must contain at least one special character")
       .matches(/^(?!.*\s).{0,}$/, "Your password cannot contain spaces")
 }).noUnknown(true)
+
+export const loginUserSchema = object().shape({
+  email: string()
+      .email("E-mail format invalid")
+      .required("E-mail is required on body request"),
+  password: string()
+  .required("Password is required on body request")
+}).noUnknown(true)

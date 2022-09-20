@@ -8,3 +8,10 @@ export interface iReturnCreateUser {
     name: string,
     email: string
 }
+export interface iLoginUser {
+    email: string,
+    password: string
+}
+export interface iReturnLoginUser {
+    acessToken: string
+}
