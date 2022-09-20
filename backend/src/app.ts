@@ -5,5 +5,5 @@ import { handleAppErrorMiddleware } from "./middlewares/handleAppError"
 
 export const app = express()
 app.use(express.json())
-app.use("/", UserRouter)
+app.use("/user", UserRouter)
 app.use(handleAppErrorMiddleware)
