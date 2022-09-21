@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import { appDataSource } from "../data-source";
 import { app } from "../app";
 import request from "supertest";
-import { iCreateUser, iLoginUser } from "../interfaces/user/index";
+import { iCreateUserTest, iLoginUserTest } from "../interfaces/user/tests";
 
 let connection: DataSource
 
@@ -20,7 +20,13 @@ afterAll(async () => {
   await connection.destroy();
 });
 
-const validCreateUserData: iCreateUser = {
+const validCreateUserData: iCreateUserTest = {
+    name: "Ogaki",
+    email: "ogaki@gmail.com",
+    password: "Abc123!-"
+}
+
+const validCreateUserData2: iCreateUserTest = {
     name: "Ogaki",
     email: "ogaki@gmail.com",
     password: "Abc123!-"
@@ -41,19 +47,23 @@ const invalidCreateUserData3 = {
     password: "Abc123!-"
 }
 
-const validLoginUserData: iLoginUser = {
+const validLoginUserData: iLoginUserTest = {
     email: "ogaki@gmail.com",
     password: "Abc123!-"
 }
 
-const invalidLoginUserData: iLoginUser = {
+const invalidLoginUserData: iLoginUserTest = {
     email: "ogaki@gmail.com",
     password: "Abacate123!-"
 }
 
-const invalidLoginUserData2: iLoginUser = {
+const invalidLoginUserData2: iLoginUserTest = {
     email: "paulo@gmail.com",
     password: "Abacate123!-"
+}
+
+const validUpdateUserData = {
+    email: "atualizado@gmail.com"
 }
 
 describe("User creation test", () => {
@@ -63,6 +73,7 @@ describe("User creation test", () => {
         expect(response.status).toEqual(201);
         expect(response.body).toHaveProperty("id");
         expect(response.body).not.toHaveProperty("password");
+        validCreateUserData.id = response.body.id
       });
 
     test("Testing user creation with invalid information", async () => {
@@ -74,7 +85,7 @@ describe("User creation test", () => {
     });
 
     test("Testing creation of already registered user", async () => {
-        const response = await request(app).post("/user/register").send(validCreateUserData);
+        const response = await request(app).post("/user/register").send(validCreateUserData2);
     
         expect(response.status).toEqual(400);
         expect(response.body).toHaveProperty("error");
@@ -104,6 +115,7 @@ describe("User login test", () => {
     
         expect(response.status).toEqual(200);
         expect(response.body).toHaveProperty("accessToken");
+        validLoginUserData.accessToken = response.body.accessToken;
     });
 
     test("Testing login with invalid information", async () => {
@@ -121,4 +133,38 @@ describe("User login test", () => {
         expect(response.body).toHaveProperty("error");
         expect(response.body.error).toEqual("User not found");
     });
+})
+
+describe("User update test", () => {
+    test("Updating an Authenticated User", async () => {
+        const response = await request(app).patch("/user/").send(validUpdateUserData).set("Authorization", `Bearer ${validLoginUserData.accessToken}`)
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty("id");
+        expect(response.body.id).toEqual(validCreateUserData.id);
+    })
+
+    test("Updating an unauthenticated user", async () => {
+        const response = await request(app).patch("/user/").send(validUpdateUserData).set("Authorization", `Bearer idonthavetoken`)
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toHaveProperty("error");
+        expect(response.body.error).toEqual("Invalid authorization access token");
+    })
+})
+
+describe("User delete test", () => {
+    test("Deleting an authenticated user", async () => {
+        const response = await request(app).delete("/user/").send().set("Authorization", `Bearer ${validLoginUserData.accessToken}`)
+
+        expect(response.status).toEqual(204);
+    })
+
+    test("Deleting an unauthenticated user", async () => {
+        const response = await request(app).delete("/user/").send().set("Authorization", `Bearer idonthavetoken`)
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toHaveProperty("error");
+        expect(response.body.error).toEqual("Invalid authorization access token");
+    })
 })
