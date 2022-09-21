@@ -32,6 +32,12 @@ const validCreateUserData2: iCreateUserTest = {
     password: "Abc123!-"
 }
 
+const validCreateUserData3: iCreateUserTest = {
+    name: "Ogaki",
+    email: "ogaki@gmail.com",
+    password: "Abc123!-"
+}
+
 const invalidCreateUserData = {
     email: "ogaki2@gmail.com",
     password: "Abc123!-"
