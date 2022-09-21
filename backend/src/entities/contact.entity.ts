@@ -2,7 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne, JoinColumn }
 import { Client } from "./client.entity";
 
 @Entity("contacts")
-@Unique(["email"])
 export class Contact {
   @PrimaryGeneratedColumn("uuid")
   id: string;

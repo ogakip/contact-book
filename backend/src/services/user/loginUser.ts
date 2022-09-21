@@ -14,7 +14,7 @@ export const loginUserService = async ({ email, password }: iLoginUser): Promise
         throw new AppError("User not found");
     }
 
-    const comparePassword = compare(password, userExists.password);
+    const comparePassword = await compare(password, userExists.password);
 
     if (!comparePassword) {
         throw new AppError("E-mail or password don't match");
