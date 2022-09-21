@@ -24,6 +24,25 @@ export const updateClientService = async (data: iUpdateClient, user_id: string, 
         throw new AppError("You don't have permission to edit this", 401);
     }
 
+    if (data.email) {
+        const clientAlreadyExists = await getClientRepo.findOne({ 
+            where: [{ email: data.email, user: userExists }]
+        })
+
+        if (clientAlreadyExists) {
+            throw new AppError("You already have a customer with this registered email")
+        }
+    }
+    if (data.telephone) {
+        const clientAlreadyExists = await getClientRepo.findOne({ 
+            where: [{ telephone: data.telephone, user: userExists }]
+        })
+
+        if (clientAlreadyExists) {
+            throw new AppError("You already have a customer with this registered telephone")
+        }
+    }
+
     await getClientRepo.update(client_id, data)
 
     const getClientAfterUpdate = await getClientRepo.findOneBy({ id: client_id })

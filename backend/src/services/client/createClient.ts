@@ -22,6 +22,25 @@ export const createClientService = async ({ name, email, telephone }: iCreateCli
         throw new AppError("You already have this client")
     }
 
+    if (email) {
+        const clientAlreadyExists = await getClientRepo.findOne({ 
+            where: [{ email, user: getUserInfo }]
+        })
+
+        if (clientAlreadyExists) {
+            throw new AppError("You already have a customer with this registered email")
+        }
+    }
+    if (telephone) {
+        const clientAlreadyExists = await getClientRepo.findOne({ 
+            where: [{ telephone, user: getUserInfo }]
+        })
+
+        if (clientAlreadyExists) {
+            throw new AppError("You already have a customer with this registered telephone")
+        }
+    }
+
     const returnClient = await getClientRepo.save({
         name,
         email,
