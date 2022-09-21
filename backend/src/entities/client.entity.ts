@@ -3,7 +3,6 @@ import { User } from "./user.entity";
 import { Contact } from "./contact.entity";
 
 @Entity("clients")
-@Unique(["email"])
 export class Client {
   @PrimaryGeneratedColumn("uuid")
   id: string;
