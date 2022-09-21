@@ -4,6 +4,7 @@ import { app } from "../app";
 import request from "supertest";
 import { iCreateUserTest, iLoginUserTest } from "../interfaces/user/tests";
 import { iCreateClientData } from "../interfaces/client/tests";
+import { iCreateContactTest } from "../interfaces/contact/tests"
 
 let connection: DataSource
 
@@ -25,6 +26,11 @@ beforeAll(async () => {
     const login2 = await request(app).post("/user/login").send(validLoginUserData2)
     validCreateUserData.accessToken = login1?.body?.accessToken
     validCreateUserData2.accessToken = login2?.body?.accessToken
+
+    const client1 = await request(app).post("/clients/").send(validCreateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+    validCreateClientData.id = client1.body.id
+    const client2 = await request(app).post("/clients/").send(validCreateClientData2).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+    validCreateClientData2.id = client2.body.id
 });
 
 afterAll(async () => {
@@ -64,65 +70,71 @@ const validCreateClientData2: iCreateClientData = {
     telephone: "(44)9999-9999"
 }
 
-const invalidCreateClientData = {
+const validCreateContactData: iCreateContactTest = {
+    name: "client1",
     email: "client1@gmail.com",
     telephone: "(44)9999-9999"
 }
 
-const validUpdateClientData = {
-    email: "client1atualizado@gmail.com"
+const validCreateContactData2: iCreateContactTest = {
+    name: "client1",
+    email: "client1@gmail.com",
+    telephone: "(44)9999-999"
 }
 
-const invalidUpdateClientData = {
-    email: "client1atualizado"
+const invalidCreateContactData = {
+    name: "client1",
+    email: "client1@gmail.com"
 }
 
-describe("Client creation test", () => {
-    test("Creating a customer with valid information", async () => {
-        const response = await request(app).post("/clients/").send(validCreateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+const validUpdateContactData = {
+    email: "contact1@gmail.com"
+}
+
+const invalidUpdateContactData = {
+    email: "contact1"
+}
+
+describe("Create contact tests", () => {
+    test("Creating a contact with valid information", async () => {
+        const response = await request(app).post(`/contacts/${validCreateClientData.id}`).send(validCreateContactData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
         expect(response.status).toEqual(201);
         expect(response.body).toHaveProperty("id");
-        validCreateClientData2.id = response.body.id
+        validCreateContactData.id = response.body.id
     })
 
-    test("Creating a customer with invalid information", async () => {
-        const response = await request(app).post("/clients/").send(invalidCreateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+    test("Creating a contact with invalid information", async () => {
+        const response = await request(app).post(`/contacts/${validCreateClientData.id}`).send(invalidCreateContactData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
         expect(response.status).toEqual(400);
         expect(response.body).toHaveProperty("error");
-        expect(response.body.error).toEqual("Name is required on body request");
-    })
-
-    test("Creating a customer already registered by the user", async () => {
-        const response = await request(app).post("/clients/").send(validCreateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
-        expect(response.status).toEqual(400);
-        expect(response.body).toHaveProperty("error");
-        expect(response.body.error).toEqual("You already have this client");
+        expect(response.body.error).toEqual("Telephone is required on body request");
     })
 })
 
-describe("Updating a customer", () => {
-    test("Updating a customer with valid information", async () => {
-        const response = await request(app).patch(`/clients/${validCreateClientData2.id}`).send(validUpdateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+describe("Update contact tests", () => {
+    test("Updating a contact with valid information", async () => {
+        const response = await request(app).patch(`/contacts/${validCreateContactData.id}`).send(validUpdateContactData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+        console.log(response.body.error)
         expect(response.status).toEqual(200);
         expect(response.body).toHaveProperty("id");
     })
 
-    test("Updating a customer with invalid information", async () => {
-        const response = await request(app).patch(`/clients/${validCreateClientData2.id}`).send(invalidUpdateClientData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+    test("Updating a contact with invalid information", async () => {
+        const response = await request(app).patch(`/contacts/${validCreateContactData.id}`).send(invalidUpdateContactData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
         expect(response.status).toEqual(400);
         expect(response.body).toHaveProperty("error");
         expect(response.body.error).toEqual("E-mail format invalid");
     })
 })
 
-describe("Deleting a customer test", () => {
-    test("Deleting a client with authorization", async () => {
-        const response = await request(app).delete(`/clients/${validCreateClientData2.id}`).send().set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
+describe("Delete contact tests", () => {
+    test("Deleting a contact with authorization", async () => {
+        const response = await request(app).delete(`/contacts/${validCreateContactData.id}`).send().set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
         expect(response.status).toEqual(204);
     })
 
-    test("Deleting a client without authorization", async () => {
-        const response = await request(app).delete(`/clients/${validCreateClientData2.id}`).send().set("Authorization", `Bearer naotemtoken`)
+    test("Deleting a contact without authorization", async () => {
+        const response = await request(app).delete(`/contacts/${validCreateContactData.id}`).send().set("Authorization", `Bearer naotemtoken`)
         expect(response.status).toEqual(401);
         expect(response.body).toHaveProperty("error");
         expect(response.body.error).toEqual("Invalid authorization access token");
