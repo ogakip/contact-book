@@ -22,3 +22,16 @@ export const loginUserSchema = object().shape({
   password: string()
   .required("Password is required on body request")
 }).noUnknown(true)
+
+export const updateUserSchema = object().shape({
+  name: string().max(158, "Length must be under 158"),
+  email: string()
+    .email("E-mail format invalid")
+    .max(158, "Length must be under 158"),
+  password: string()
+  .matches(/[a-z]/, "Your password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Your password must contain at least one capital letter")
+    .matches(/[0-9]/, "Your password must contain at least one number")
+    .matches(/\W/, "Your password must contain at least one special character")
+    .matches(/^(?!.*\s).{0,}$/, "Your password cannot contain spaces")
+}).noUnknown(true)

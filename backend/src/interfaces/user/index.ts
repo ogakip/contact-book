@@ -13,5 +13,10 @@ export interface iLoginUser {
     password: string
 }
 export interface iReturnLoginUser {
-    acessToken: string
+    accessToken: string
+}
+export interface iUpdateUser {
+    name?: string, 
+    email?: string,
+    password?: string
 }
