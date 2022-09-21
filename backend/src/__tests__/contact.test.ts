@@ -114,7 +114,6 @@ describe("Create contact tests", () => {
 describe("Update contact tests", () => {
     test("Updating a contact with valid information", async () => {
         const response = await request(app).patch(`/contacts/${validCreateContactData.id}`).send(validUpdateContactData).set("Authorization", `Bearer ${validCreateUserData.accessToken}`)
-        console.log(response.body.error)
         expect(response.status).toEqual(200);
         expect(response.body).toHaveProperty("id");
     })

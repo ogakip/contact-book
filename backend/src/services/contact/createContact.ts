@@ -38,7 +38,6 @@ export const createContactService = async (data: iCreateContact, user_id: string
         where: [{ email: data.email, client: getClient }]
     })
     if (contactWithEmailAlreadyExists) {
-        console.log(contactWithEmailAlreadyExists)
         throw new AppError("The customer already has a contact with this email")
     }
 
