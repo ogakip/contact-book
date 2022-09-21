@@ -8,5 +8,6 @@ export interface iReturnCreateClient {
     name: string,
     email: string,
     telephone: string,
-    created_at: Date
+    created_at: Date,
+    user_id: string
 }
