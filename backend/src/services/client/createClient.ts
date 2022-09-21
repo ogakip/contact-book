@@ -14,7 +14,9 @@ export const createClientService = async ({ name, email, telephone }: iCreateCli
         throw new AppError("User not found")
     }
 
-    const userAlreadyHaveClient = await getClientRepo.findOneBy({ user: getUserInfo })
+    const userAlreadyHaveClient = await getClientRepo.findOne({
+        where: [{ user: getUserInfo, email }]
+    })
 
     if (userAlreadyHaveClient) {
         throw new AppError("You already have this client")
@@ -23,7 +25,8 @@ export const createClientService = async ({ name, email, telephone }: iCreateCli
     const returnClient = await getClientRepo.save({
         name,
         email,
-        telephone
+        telephone,
+        user: getUserInfo
     })
 
     return {
@@ -32,5 +35,6 @@ export const createClientService = async ({ name, email, telephone }: iCreateCli
         email: returnClient.email,
         telephone: returnClient.telephone,
         created_at: returnClient.created_at,
+        user_id
     }
 }
