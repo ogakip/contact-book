@@ -20,8 +20,6 @@ export const updateClientService = async (data: iUpdateClient, user_id: string, 
         throw new AppError("Client not found");
     }
 
-    console.log(clientExists)
-
     if (clientExists.user.id !== user_id) {
         throw new AppError("You don't have permission to edit this", 401);
     }
