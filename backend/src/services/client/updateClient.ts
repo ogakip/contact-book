@@ -33,6 +33,15 @@ export const updateClientService = async (data: iUpdateClient, user_id: string, 
             throw new AppError("You already have a customer with this registered email")
         }
     }
+    if (data.telephone) {
+        const clientAlreadyExists = await getClientRepo.findOne({ 
+            where: [{ telephone: data.telephone, user: userExists }]
+        })
+
+        if (clientAlreadyExists) {
+            throw new AppError("You already have a customer with this registered telephone")
+        }
+    }
 
     await getClientRepo.update(client_id, data)
 
