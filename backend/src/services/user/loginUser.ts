@@ -20,11 +20,11 @@ export const loginUserService = async ({ email, password }: iLoginUser): Promise
         throw new AppError("E-mail or password don't match");
     }
 
-    const acessToken = jwt.sign({ user_id: userExists.id }, 'SECRET_KEY', {
+    const accessToken = jwt.sign({ user_id: userExists.id }, 'SECRET_KEY', {
         expiresIn: "24h"
     });
 
     return {
-        acessToken
+        accessToken
     }
 }
