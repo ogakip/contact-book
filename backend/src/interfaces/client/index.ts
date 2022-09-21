@@ -11,3 +11,8 @@ export interface iReturnCreateClient {
     created_at: Date,
     user_id: string
 }
+export interface iUpdateClient {
+    name?: string,
+    email?: string,
+    telephone?: string
+}

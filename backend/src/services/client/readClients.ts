@@ -14,7 +14,9 @@ export const readClientsService = async (user_id: string) => {
         throw new AppError("User not found");
     }
 
-    const getAllUserClients = await getClientRepo.find()
+    const getAllUserClients = await getClientRepo.find({
+        where: [ { user: userExists } ]
+    })
 
     if (!getAllUserClients) {
         throw new AppError("Customers not found")
