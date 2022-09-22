@@ -25,3 +25,15 @@ services:
       timeout: 15s
       retries: 5
       start_period: 30s
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/:/app:rw
+    depends_on:
+      contact_database:
+        condition: service_healthy
+      contact_database:
+        condition: service_healthy
