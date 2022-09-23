@@ -12,10 +12,10 @@ import {
   AiFillEyeInvisible,
   AiFillEye,
 } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
-export const FormContainer = () => {
+export const FormContainer = ({ setFormData }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState("");
   const {
     register,
     handleSubmit,
@@ -25,17 +25,12 @@ export const FormContainer = () => {
     resolver: yupResolver(registerSchema),
   });
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const onSubmitForm = (data) => {
-    console.log(data);
-    setFormData(JSON.stringify(data));
+    setFormData(data);
     reset();
   };
 
@@ -96,6 +91,7 @@ export const FormContainer = () => {
             ),
           }}
         />
+        <span>Já tem uma conta? <Link>Faça login</Link></span>
         <div className="btn-box">
           <Button type="submit" variant="contained">
             Registrar

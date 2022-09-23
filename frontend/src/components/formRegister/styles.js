@@ -15,9 +15,10 @@ border-radius: 10px;
     width: 90%;
     display: flex;
     justify-content: space-evenly;
+    align-self: center;
 }
 
-h2 {
+h2, span {
     align-self: center;
     color: #0000009e;
 }
@@ -34,5 +35,10 @@ gap: 25px;
 
 .eye-icon {
     cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
 }
 `
