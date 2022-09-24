@@ -1,12 +1,12 @@
-import { FormContainer } from "../../components/formRegister";
 import * as Styled from "./styles";
-import { useNavigate } from "react-router-dom";
+import { FormContainer } from "../../components/formLogin";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { api } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 import { Loading } from "../../components/loading";
+import { api } from "../../services/api";
+import { toast } from "react-toastify";
 
-export const Register = () => {
+export const Login = () => {
   const getToken = localStorage.getItem("accessToken");
   let navigate = useNavigate();
   const [formData, setFormData] = useState(undefined);
@@ -14,18 +14,18 @@ export const Register = () => {
 
   useEffect(() => {
     if (getToken) {
-      return navigate("/dashboard");
+      setTimeout(() => {
+        return navigate("/dashboard");
+      }, 1500)
     }
   }, [getToken]);
 
-  const sentRegisterRequest = () => {
-    api
-      .post("user/register", formData)
+  const sendLoginRequest = async () => {
+    await api
+      .post("user/login", formData)
       .then((res) => {
-        toast.success("Account created with success!");
-        setTimeout(() => {
-          return navigate("/login");
-        }, 1500);
+        localStorage.setItem("accessToken", res.data.accessToken)
+        toast.success("You are logged in")
       })
       .catch((error) => toast.error(`${error.response.data.error}`));
     setIsLoading(false);
@@ -34,7 +34,7 @@ export const Register = () => {
   useEffect(() => {
     if (formData) {
       setIsLoading(true);
-      sentRegisterRequest();
+      sendLoginRequest();
     }
   }, [formData]);
 

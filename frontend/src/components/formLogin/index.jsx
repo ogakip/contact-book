@@ -2,11 +2,10 @@ import * as Styled from "./styles";
 import { TextField, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { registerSchema } from "../../validations/register";
+import { loginSchema } from "../../validations/login";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import {
-  AiOutlineUser,
   AiOutlineMail,
   AiOutlineKey,
   AiFillEyeInvisible,
@@ -22,7 +21,7 @@ export const FormContainer = ({ setFormData }) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(registerSchema),
+    resolver: yupResolver(loginSchema),
   });
 
   const handleShowPassword = () => {
@@ -39,24 +38,16 @@ export const FormContainer = ({ setFormData }) => {
   };
 
   useEffect(() => {
-    const { name, email, password } = errors;
-    const allErrors = [name, email, password];
+    const { email, password } = errors;
+    const allErrors = [ email, password ];
     const filterErrors = allErrors.filter((error) => error !== undefined);
     filterErrors.map((error) => toast.error(`${error.message}`));
   }, [errors]);
 
   return (
     <Styled.Container>
-      <h2>Register form</h2>
+      <h2>Login form</h2>
       <Styled.InputContainer onSubmit={handleSubmit(onSubmitForm)}>
-        <TextField
-          {...register("name")}
-          placeholder="Name"
-          label="Name"
-          InputProps={{
-            startAdornment: <AiOutlineUser size="20px" className="form-icon" />,
-          }}
-        />
         <TextField
           {...register("email")}
           placeholder="E-mail"
@@ -68,8 +59,8 @@ export const FormContainer = ({ setFormData }) => {
         <TextField
           type={showPassword ? "text" : "password"}
           {...register("password")}
-          placeholder="Password"
-          label="Password"
+          placeholder="Senha"
+          label="Senha"
           InputProps={{
             startAdornment: <AiOutlineKey size="20px" className="form-icon" />,
             endAdornment: (
@@ -91,13 +82,13 @@ export const FormContainer = ({ setFormData }) => {
             ),
           }}
         />
-        <span>Already have an account? <Link to="/login">Login</Link></span>
+        <span>Não tem uma conta? <Link to="/register">Registre-se</Link></span>
         <div className="btn-box">
           <Button type="submit" variant="contained">
-            Register
+            Login
           </Button>
           <Button onClick={resetForm} variant="outlined">
-            Clear form
+            Limpar
           </Button>
         </div>
       </Styled.InputContainer>
