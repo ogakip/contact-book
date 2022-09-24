@@ -3,13 +3,14 @@ import * as Styled from "./styles";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { api } from "../../services/api"
+import { api } from "../../services/api";
 import { Loading } from "../../components/loading";
 
 export const Register = () => {
   const getToken = localStorage.getItem("accessToken");
   let navigate = useNavigate();
   const [formData, setFormData] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (getToken) {
@@ -17,17 +18,24 @@ export const Register = () => {
     }
   }, [getToken]);
 
+  const sentRegisterRequest = async () => {
+    setIsLoading(true);
+    console.log(formData)
+    const response = await api.post("user/register", JSON.stringify(formData))
+    console.log(response)
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (formData) {
-        toast.success("chegou")
-        console.log(formData)
+      sentRegisterRequest()
     }
-  }, [formData])
+  }, [formData]);
 
   return (
     <Styled.Container>
-      <Loading/>
-      <FormContainer setFormData={setFormData}/>
+      {isLoading && <Loading />}
+      <FormContainer setFormData={setFormData} />
     </Styled.Container>
   );
 };
