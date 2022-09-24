@@ -91,7 +91,7 @@ export const FormContainer = ({ setFormData }) => {
             ),
           }}
         />
-        <span>Já tem uma conta? <Link>Faça login</Link></span>
+        <span>Já tem uma conta? <Link to="/login">Faça login</Link></span>
         <div className="btn-box">
           <Button type="submit" variant="contained">
             Registrar
