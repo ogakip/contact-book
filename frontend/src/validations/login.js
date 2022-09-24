@@ -1,7 +1,6 @@
 import * as yup from "yup"
 
-export const registerSchema = yup.object().shape({
-    name: yup.string().required("Name is required on body request").max(158, "Length must be under 158"),
+export const loginSchema = yup.object().shape({
     email: yup.string()
       .email("E-mail format invalid")
       .required("E-mail is required on body request")
