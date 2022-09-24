@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { api } from "../../services/api"
+import { Loading } from "../../components/loading";
 
 export const Register = () => {
   const getToken = localStorage.getItem("accessToken");
@@ -25,6 +26,7 @@ export const Register = () => {
 
   return (
     <Styled.Container>
+      <Loading/>
       <FormContainer setFormData={setFormData}/>
     </Styled.Container>
   );
