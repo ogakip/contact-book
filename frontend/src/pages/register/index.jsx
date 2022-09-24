@@ -20,15 +20,13 @@ export const Register = () => {
 
   const sentRegisterRequest = async () => {
     setIsLoading(true);
-    console.log(formData)
-    const response = await api.post("user/register", JSON.stringify(formData))
-    console.log(response)
+    await api.post("user/register", formData)
     setIsLoading(false);
   };
 
   useEffect(() => {
     if (formData) {
-      sentRegisterRequest()
+      sentRegisterRequest();
     }
   }, [formData]);
 
