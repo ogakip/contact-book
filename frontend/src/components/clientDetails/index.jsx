@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { FormContact } from "../formContact";
 import { ContactEditModal } from "../contactEdit";
+import { DeleteContactModal } from "../deleteContact";
 
 export const ClientDetails = ({ currentId, setClientDetails }) => {
   const getToken = localStorage.getItem("accessToken");
@@ -19,6 +20,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
   const [formContactEditData, setFormContactEditData] = useState(undefined)
   const [currentContactId, setCurrentContactId] = useState("")
   const [contactEdit, setContactEdit] = useState(false)
+  const [contactDelete, setContactDelete] = useState(false)
 
   const getClientContacts = () => {
     api
@@ -62,10 +64,10 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
     setContactEdit(true);
   };
 
-  // const handleDelete = (event, cellValues) => {
-  //   setCurrentId(cellValues.id);
-  //   setClientDelete(true);
-  // };
+  const handleDelete = (event, cellValues) => {
+    setCurrentContactId(cellValues.id);
+    setContactDelete(true);
+  };
 
   useEffect(() => {
     filterData()
@@ -94,7 +96,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
             variant="outlined"
             color="primary"
             onClick={(event) => {
-              handleClick(event, cellValues);
+              handleDelete(event, cellValues);
             }}
           >
             Delete
@@ -144,6 +146,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
     <Styled.Container>
       {contactModal && <FormContact setContactModal={setContactModal} setFormData={setFormData}/>}
       {contactEdit && <ContactEditModal currentContactId={currentContactId} setContactEdit={setContactEdit} setFormData={setFormContactEditData}/>}
+      {contactDelete && <DeleteContactModal currentContactId={currentContactId} setContactDelete={setContactDelete} getClientContacts={getClientContacts}/>}
       <Styled.DataContainer>
         <div>
           <div className="table-header">
