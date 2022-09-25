@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
+import { FormContact } from "../formContact";
 
 export const ClientDetails = ({ currentId, setClientDetails }) => {
   const getToken = localStorage.getItem("accessToken");
@@ -13,6 +14,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [filterSearch, setFilterSearch] = useState("");
   const [contactModal, setContactModal] = useState(false);
+  const [formData, setFormData] = useState(undefined)
 
   const getClientContacts = () => {
     api
@@ -47,6 +49,10 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
     }
   }
 
+  const handleClick = (event, cellValues) => {
+    console.log(cellValues.id)
+  }
+
   useEffect(() => {
     filterData()
   }, [filterSearch])
@@ -56,14 +62,58 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "E-mail", flex: 1 },
     { field: "telephone", headerName: "Telephone", flex: 1 },
+    {
+      field: "Actions",
+      renderCell: (cellValues) => {
+        return (
+          <div style={{ display: "flex", gap: "5px"  }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(event) => {
+              handleClick(event, cellValues);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={(event) => {
+              handleClick(event, cellValues);
+            }}
+          >
+            Delete
+          </Button>
+          </div>
+        );
+      },
+      flex: 1
+    }
   ];
 
   useEffect(() => {
     getClientContacts();
   }, []);
 
+  useEffect(() => {
+    if (formData) {
+      api.post(`contacts/${currentId}`, formData, {
+        headers: {
+          "Authorization": `Bearer ${getToken}`
+        }
+      }).then((res) => {
+        toast.success("Contact created with success")
+        getClientContacts()
+      }).catch((error) => {
+        toast.error(error.response.data.error)
+      })
+    }
+  }, [formData])
+
   return (
     <Styled.Container>
+      {contactModal && <FormContact setContactModal={setContactModal} setFormData={setFormData}/>}
       <Styled.DataContainer>
         <div>
           <div className="table-header">
