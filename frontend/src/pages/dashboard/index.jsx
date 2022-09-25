@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { Header } from "../../components/header";
 import { Button, TextField } from "@mui/material";
-import { AiOutlineSearch } from "react-icons/ai"
+import { ClientForm } from "../../components/clientForm";
+import { toast } from "react-toastify";
 
 export const Dashboard = () => {
   const getToken = localStorage.getItem("accessToken");
@@ -13,6 +14,8 @@ export const Dashboard = () => {
   const [clientData, setClientData] = useState([]);
   const [filteredData, setFilteredData] = useState([])
   const [filterSearch, setFilterSearch] = useState("")
+  const [clientModal, setClientModal] = useState(false)
+  const [formData, setFormData] = useState(undefined)
 
   useEffect(() => {
     if (!getToken) {
@@ -61,6 +64,22 @@ export const Dashboard = () => {
     getClientData();
   }, []);
 
+  useEffect(() => {
+    if (formData) {
+      api.post("/clients/", formData, {
+        headers: {
+          "Authorization": `Bearer ${getToken}`
+        }
+      }).then((res) => {
+        toast.success("Client created with success")
+        getClientData()
+        setClientModal(false)
+      }).catch((error) => {
+        toast.success(error.response.data.error)
+      })
+    }
+  }, [formData])
+
   const columns = [
     { field: "id", headerName: 'ID', flex: 1 },
     { field: "name", headerName: 'Name', flex: 1 },
@@ -86,6 +105,7 @@ export const Dashboard = () => {
 
   return (
     <Styled.Container>
+      {clientModal && <ClientForm setFormData={setFormData} setClientModal={setClientModal}/>}
       <Header />
       <Styled.DataContainer>
         <div>
@@ -95,7 +115,7 @@ export const Dashboard = () => {
                 <TextField placeholder="Filter search" label="Filter search" onChange={(event) => setFilterSearch(event.target.value)}/>
                 <Button variant="outlined" onClick={() => setFilterSearch("")}>Clear filter</Button>
               </div>
-              <Button variant="contained">Add Client</Button>
+              <Button onClick={() => setClientModal(true)} variant="contained">Add Client</Button>
             </div>
             {filterSearch?.length === 0 ? (
               <DataTable data={clientData && clientData} columns={columns}/>
