@@ -9,6 +9,7 @@ import { ClientForm } from "../../components/clientForm";
 import { toast } from "react-toastify";
 import { ClientDetails } from "../../components/clientDetails";
 import { ClientFormEdit } from "../../components/clientEdit";
+import { DeleteClientModal } from "../../components/deleteClientModal";
 
 export const Dashboard = () => {
   const getToken = localStorage.getItem("accessToken");
@@ -18,11 +19,11 @@ export const Dashboard = () => {
   const [filterSearch, setFilterSearch] = useState("");
   const [clientModal, setClientModal] = useState(false);
   const [formData, setFormData] = useState(undefined);
-  const [editClientFormData, setEditClientFormData] = useState(undefined)
+  const [editClientFormData, setEditClientFormData] = useState(undefined);
   const [clientDetails, setClientDetails] = useState(false);
   const [currentId, setCurrentId] = useState("");
-  const [clientEdit, setClientEdit] = useState(false)
-  const [clientDelete, setClientDelete] = useState(false)
+  const [clientEdit, setClientEdit] = useState(false);
+  const [clientDelete, setClientDelete] = useState(false);
 
   useEffect(() => {
     if (!getToken) {
@@ -70,12 +71,12 @@ export const Dashboard = () => {
   const handleEdit = (event, cellValues) => {
     setCurrentId(cellValues.id);
     setClientEdit(true);
-  }
+  };
 
   const handleDelete = (event, cellValues) => {
     setCurrentId(cellValues.id);
     setClientDelete(true);
-  }
+  };
 
   useEffect(() => {
     getClientData();
@@ -102,17 +103,20 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (editClientFormData) {
-      api.patch(`clients/${currentId}`, editClientFormData, {
-        headers: {
-          "Authorization": `Bearer ${getToken}`
-        }
-      }).then((res) => {
-        toast.success("Client edited with success")
-        getClientData();
-        setClientEdit(false);
-      }).catch((error) => toast.error(error.response.data.error))
+      api
+        .patch(`clients/${currentId}`, editClientFormData, {
+          headers: {
+            Authorization: `Bearer ${getToken}`,
+          },
+        })
+        .then((res) => {
+          toast.success("Client edited with success");
+          getClientData();
+          setClientEdit(false);
+        })
+        .catch((error) => toast.error(error.response.data.error));
     }
-  }, [editClientFormData])
+  }, [editClientFormData]);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
@@ -169,7 +173,15 @@ export const Dashboard = () => {
       {clientModal && (
         <ClientForm setFormData={setFormData} setClientModal={setClientModal} />
       )}
-      {clientEdit && <ClientFormEdit setFormData={setEditClientFormData} setClientEdit={setClientEdit}/>}
+      {clientEdit && (
+        <ClientFormEdit
+          setFormData={setEditClientFormData}
+          setClientEdit={setClientEdit}
+        />
+      )}
+      {clientDelete && (
+        <DeleteClientModal setClientDelete={setClientDelete} currentId={currentId} getClientData={getClientData}/>
+      )}
       <Header />
       <Styled.DataContainer>
         <div>
