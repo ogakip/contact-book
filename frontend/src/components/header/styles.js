@@ -15,6 +15,7 @@ justify-content: space-between;
 
     svg {
         cursor: pointer;
+        color: #999999;
     }
 }
 
