@@ -13,7 +13,7 @@ export const Header = () => {
   const navigate = useNavigate()
   const [openModal, setOpenModal] = useState(false);
   const [isLogout, setIsLogout] = useState(false)
-  const [isEditUser, setEditUser] = useState(true)
+  const [isEditUser, setEditUser] = useState(false)
   const [formData, setFormData] = useState(undefined)
   const getToken = localStorage.getItem("accessToken")
 
@@ -55,14 +55,14 @@ export const Header = () => {
   return (
     <Styled.Container>
       {isLogout && <ModalLogout setIsLogout={setIsLogout}/>}
-      {isEditUser && <ModalEditUser handleLogout={deleteUserRequest} setFormData={setFormData} setEditUser={setEditUser}/>}
+      {isEditUser && <ModalEditUser handleDelete={deleteUserRequest} setFormData={setFormData} setEditUser={setEditUser}/>}
       <h1>
         <span>C</span>ontactBook
         <GrContactInfo />
       </h1>
       <div onClick={() => handleModal(openModal)}>
         <GiHamburgerMenu size="30px"/>
-        {openModal && <ModalUser setIsLogout={setIsLogout}/>}
+        {openModal && <ModalUser setEditUser={setEditUser} setIsLogout={setIsLogout}/>}
       </div>
     </Styled.Container>
   );

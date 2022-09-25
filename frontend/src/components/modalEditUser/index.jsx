@@ -13,7 +13,7 @@ import {
   AiFillEye,
 } from "react-icons/ai";
 
-export const ModalEditUser = ({ setEditUser, setFormData, handleLogout }) => {
+export const ModalEditUser = ({ setEditUser, setFormData, handleDelete }) => {
   const {
     register,
     handleSubmit,
@@ -48,7 +48,7 @@ export const ModalEditUser = ({ setEditUser, setFormData, handleLogout }) => {
       <div>
         <Styled.HeaderModal>
           Edit user
-          <MdClose size="20px" />
+          <MdClose size="20px" onClick={() => setEditUser(false)} />
         </Styled.HeaderModal>
         <Styled.BodyModal onSubmit={handleSubmit(onSubmitForm)}>
           <TextField
@@ -101,7 +101,7 @@ export const ModalEditUser = ({ setEditUser, setFormData, handleLogout }) => {
           />
           <div className="btn-box">
             <Button type="submit" variant="contained">Edit</Button>
-            <Button onClick={handleLogout}>Delete account</Button>
+            <Button onClick={handleDelete}>Delete account</Button>
           </div>
         </Styled.BodyModal>
       </div>
