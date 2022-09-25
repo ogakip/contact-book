@@ -51,10 +51,9 @@ export const ModalBox = styled.div`
 
   .logout {
     height: calc(100% -1px);
-    background-color: #ffc1c1;
 
     :hover {
-      background-color: #ff6262;
+      background-color: #ffc1c1;
     }
   }
 `;
