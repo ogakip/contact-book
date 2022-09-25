@@ -21,10 +21,11 @@ export class Client {
 
   @ManyToOne(() => User, {
     eager: true,
+    onDelete: 'CASCADE'
   })
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @OneToMany(() => Contact, (Contact) => Contact.client)
+  @OneToMany(() => Contact, (Contact) => Contact.client, { onDelete: 'CASCADE' })
   contacts: Contact[];
 }

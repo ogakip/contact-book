@@ -16,6 +16,6 @@ export class User {
   @Column({ nullable: true })
   password: string;
 
-  @OneToMany(() => Client, (Client) => Client.user)
+  @OneToMany(() => Client, (Client) => Client.user, { onDelete: 'CASCADE' })
   clients: Client[];
 }
