@@ -1,10 +1,15 @@
-import * as Styled from "./styles"
-import { Table } from "antd"
+import * as Styled from "./styles";
+import { DataGrid } from "@mui/x-data-grid";
 
-export const DataTable = ({ data = [], columns = [] }) => {
-    return (
-        <Styled.Container>
-            <Table dataSource={data} columns={columns}/>
-        </Styled.Container>
-    )
-}
+export const DataTable = ({ data, columns }) => {
+  return (
+    <Styled.Container>
+      <DataGrid
+        rows={data}
+        columns={columns}
+        autoHeight
+        pageSize={10}
+      />
+    </Styled.Container>
+  );
+};
