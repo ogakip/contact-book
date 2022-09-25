@@ -41,6 +41,7 @@ export const ModalBox = styled.div`
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    background-color: white;
 
     :hover {
       background-color: #8080804d;

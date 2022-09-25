@@ -7,6 +7,7 @@ import { Header } from "../../components/header";
 import { Button, TextField } from "@mui/material";
 import { ClientForm } from "../../components/clientForm";
 import { toast } from "react-toastify";
+import { ClientDetails } from "../../components/clientDetails";
 
 export const Dashboard = () => {
   const getToken = localStorage.getItem("accessToken");
@@ -16,6 +17,8 @@ export const Dashboard = () => {
   const [filterSearch, setFilterSearch] = useState("")
   const [clientModal, setClientModal] = useState(false)
   const [formData, setFormData] = useState(undefined)
+  const [clientDetails, setClientDetails] = useState(false)
+  const [currentId, setCurrentId] = useState("")
 
   useEffect(() => {
     if (!getToken) {
@@ -57,7 +60,8 @@ export const Dashboard = () => {
   }, [filterSearch])
 
   const handleClick = (event, cellValues) => {
-    console.log(cellValues.id)
+    setCurrentId(cellValues.id)
+    setClientDetails(true)
   }
 
   useEffect(() => {
@@ -96,7 +100,7 @@ export const Dashboard = () => {
               handleClick(event, cellValues);
             }}
           >
-            Details
+            Contacts
           </Button>
         );
       }
@@ -105,6 +109,7 @@ export const Dashboard = () => {
 
   return (
     <Styled.Container>
+      {clientDetails && <ClientDetails currentId={currentId} setClientDetails={setClientDetails}/>}
       {clientModal && <ClientForm setFormData={setFormData} setClientModal={setClientModal}/>}
       <Header />
       <Styled.DataContainer>
