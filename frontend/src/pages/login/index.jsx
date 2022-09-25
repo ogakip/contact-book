@@ -14,9 +14,7 @@ export const Login = () => {
 
   useEffect(() => {
     if (getToken) {
-      setTimeout(() => {
-        return navigate("/dashboard");
-      }, 1500)
+      navigate("/dashboard");
     }
   }, [getToken]);
 
