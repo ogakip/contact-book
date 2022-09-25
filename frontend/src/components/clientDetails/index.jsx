@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { FormContact } from "../formContact";
+import { ContactEditModal } from "../contactEdit";
+import { DeleteContactModal } from "../deleteContact";
 
 export const ClientDetails = ({ currentId, setClientDetails }) => {
   const getToken = localStorage.getItem("accessToken");
@@ -15,6 +17,10 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
   const [filterSearch, setFilterSearch] = useState("");
   const [contactModal, setContactModal] = useState(false);
   const [formData, setFormData] = useState(undefined)
+  const [formContactEditData, setFormContactEditData] = useState(undefined)
+  const [currentContactId, setCurrentContactId] = useState("")
+  const [contactEdit, setContactEdit] = useState(false)
+  const [contactDelete, setContactDelete] = useState(false)
 
   const getClientContacts = () => {
     api
@@ -53,6 +59,16 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
     console.log(cellValues.id)
   }
 
+  const handleEdit = (event, cellValues) => {
+    setCurrentContactId(cellValues.id);
+    setContactEdit(true);
+  };
+
+  const handleDelete = (event, cellValues) => {
+    setCurrentContactId(cellValues.id);
+    setContactDelete(true);
+  };
+
   useEffect(() => {
     filterData()
   }, [filterSearch])
@@ -71,7 +87,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
             variant="contained"
             color="primary"
             onClick={(event) => {
-              handleClick(event, cellValues);
+              handleEdit(event, cellValues);
             }}
           >
             Edit
@@ -80,7 +96,7 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
             variant="outlined"
             color="primary"
             onClick={(event) => {
-              handleClick(event, cellValues);
+              handleDelete(event, cellValues);
             }}
           >
             Delete
@@ -105,15 +121,32 @@ export const ClientDetails = ({ currentId, setClientDetails }) => {
       }).then((res) => {
         toast.success("Contact created with success")
         getClientContacts()
+        setContactModal(false)
       }).catch((error) => {
         toast.error(error.response.data.error)
       })
     }
   }, [formData])
 
+  useEffect(() => {
+    if (formContactEditData) {
+      api.patch(`contacts/${currentContactId}`, formContactEditData, {
+        headers: {
+          "Authorization": `Bearer ${getToken}`
+        }
+      }).then((res) => {
+        toast.success("Contact edited with success")
+        getClientContacts()
+        setContactEdit(false)
+      }).catch((error) => toast.error(error.response.data.error))
+    }
+  }, [formContactEditData])
+
   return (
     <Styled.Container>
       {contactModal && <FormContact setContactModal={setContactModal} setFormData={setFormData}/>}
+      {contactEdit && <ContactEditModal currentContactId={currentContactId} setContactEdit={setContactEdit} setFormData={setFormContactEditData}/>}
+      {contactDelete && <DeleteContactModal currentContactId={currentContactId} setContactDelete={setContactDelete} getClientContacts={getClientContacts}/>}
       <Styled.DataContainer>
         <div>
           <div className="table-header">
